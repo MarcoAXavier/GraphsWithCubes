@@ -9,28 +9,49 @@ public class Graph : MonoBehaviour
     private Transform PointPrefab => _pointPrefab;
 
     [SerializeField, Range(10,100)]
-    private float _resolution = 10;
-    private float Resolution => _resolution;
+    private int _resolution = 10;
+    private int Resolution => _resolution;
 
-    [SerializeField, Range(1,10)]
-    private float _pointsSizeDivider;
-    private float PointsSizeDivider => _pointsSizeDivider;
-
+    Transform[] Points { get; set; }
 
     private void Awake ()=> PositionAndScalePoints();
-    
+
+    private void Update() => UpdatePointsPosition(); 
 
     private void PositionAndScalePoints()
     {
+        Points = new Transform[Resolution];
+        float step = (float)2 / Resolution;
+        Vector3 scale = Vector3.one * step;
+        print(step + " " + scale);
+        Vector3 pos = Vector3.zero;
+
         for (int i = 0; i < Resolution; i++)
         {
-            Vector3 pos = Vector3.right * (i / PointsSizeDivider - 1f);
+            pos.x = (i + .5f) * step - 1f;
+            pos.y = Mathf.Pow(pos.x,3);
 
             Transform point = Instantiate(PointPrefab);
-            //pos.y = pos.x*pos.x;
+            point.SetParent(transform, false);
 
             point.localPosition = pos;
-            point.localScale = Vector3.one / PointsSizeDivider;
+            point.localScale = scale;
+
+            Points[i] = point;
+        }
+    }
+
+    private void UpdatePointsPosition()
+    {
+        float time = Time.time;
+        for (int i = 0; i < Points.Length; i++)
+        {
+            Transform point = Points[i];
+            Vector3 pos = point.position;
+
+            pos.y = Mathf.Sin(Mathf.PI * (pos.x + time));
+
+            point.position = pos;
         }
     }
 }
