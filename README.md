@@ -1,6 +1,9 @@
 This is HEAVILY based on a tutorial from Catlike Coding, which can be accessed by this link:<br/>
 https://catlikecoding.com/unity/tutorials/basics/building-a-graph/<br/>
 
+
+![](https://media.giphy.com/media/EGkq7z3OleXqXNQ1gH/giphy.gif)
+
 # GraphsWithCubes (Unity)
 Unity 2021.1.23f project which is a simple animated sine wave using cubes that change color based on their position.<br/>
 
