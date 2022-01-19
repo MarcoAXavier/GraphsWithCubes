@@ -2,21 +2,16 @@ using static UnityEngine.Mathf;
 
 public static class FunctionLibrary
 {
-    public enum Functions { Wave = 0, DoubleWave = 1, Ripple = 2 }
+    static Function[] Functions = new Function[] { Wave, DoubleWave, Ripple };
+
+    public enum FunctionName { Wave, DoubleWave, Ripple }
+
+    public delegate float Function(float x, float t);
     
-    public static float GetFunction(Functions functionIndex, float x, float t)
+    
+    public static Function GetFunction(int functionIndex)
     {
-        switch ((int)functionIndex)
-        {
-            case 0:
-                return Wave(x, t);
-            case 1:
-                return DoubleWave(x, t);
-            case 2:
-                return Ripple(x, t);
-            default:
-                return float.PositiveInfinity;
-        }
+        return Functions[functionIndex];
     } 
     public static float Wave(float x, float t)
     {
