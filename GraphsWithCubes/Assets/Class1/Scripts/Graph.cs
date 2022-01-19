@@ -8,22 +8,27 @@ public class Graph : MonoBehaviour
     private Transform _pointPrefab;
     private Transform PointPrefab => _pointPrefab;
 
-    [SerializeField, Range(10,100)]
+    [SerializeField, Range(10, 100)]
     private int _resolution = 10;
     private int Resolution => _resolution;
+
+
+    [SerializeField]
+    private FunctionLibrary.Functions _function = 0;
+    private FunctionLibrary.Functions Function => _function;
+
 
     Transform[] Points { get; set; }
 
     private void Awake ()=> PositionAndScalePoints();
 
-    private void Update() => UpdatePointsPosition(); 
+    private void Update() => UpdatePointsPosition();
 
     private void PositionAndScalePoints()
     {
         Points = new Transform[Resolution];
         float step = (float)2 / Resolution;
         Vector3 scale = Vector3.one * step;
-        print(step + " " + scale);
         Vector3 pos = Vector3.zero;
 
         for (int i = 0; i < Resolution; i++)
@@ -49,7 +54,7 @@ public class Graph : MonoBehaviour
             Transform point = Points[i];
             Vector3 pos = point.position;
 
-            pos.y = Mathf.Sin(Mathf.PI * (pos.x + time));
+            pos.y = FunctionLibrary.GetFunction(Function, pos.x, time);
 
             point.position = pos;
         }
