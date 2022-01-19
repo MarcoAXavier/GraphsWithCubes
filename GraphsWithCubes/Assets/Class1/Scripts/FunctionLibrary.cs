@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Mathf;
 
-public class FunctionLibrary : MonoBehaviour
+public static class FunctionLibrary
 {
-    // Start is called before the first frame update
-    void Start()
+    public static float Wave(float x, float t)
     {
-        
+        return Sin(PI * (x + t));
     }
 
-    // Update is called once per frame
-    void Update()
+    public static float DoubleWave(float x, float t)
     {
-        
+        float y =  Sin(PI * (x + t));
+        y += 0.5f * Sin(2f * PI * (x + t));
+        return y * (2f/3f);
     }
 }
