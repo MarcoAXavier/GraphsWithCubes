@@ -14,8 +14,8 @@ public class Graph : MonoBehaviour
 
 
     [SerializeField]
-    private FunctionLibrary.Functions _function = 0;
-    private FunctionLibrary.Functions Function => _function;
+    private FunctionLibrary.FunctionName _function = 0;
+    private FunctionLibrary.FunctionName Function => _function;
 
 
     Transform[] Points { get; set; }
@@ -54,7 +54,8 @@ public class Graph : MonoBehaviour
             Transform point = Points[i];
             Vector3 pos = point.position;
 
-            pos.y = FunctionLibrary.GetFunction(Function, pos.x, time);
+            var function = FunctionLibrary.GetFunction((int)Function);
+            pos.y = function(pos.x, time);
 
             point.position = pos;
         }
