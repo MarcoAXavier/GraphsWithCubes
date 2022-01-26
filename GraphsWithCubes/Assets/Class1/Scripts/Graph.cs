@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 public class Graph : MonoBehaviour
@@ -12,15 +14,19 @@ public class Graph : MonoBehaviour
     private int _resolution = 10;
     private int Resolution => _resolution;
 
-
     [SerializeField]
     private FunctionLibrary.FunctionName _function = 0;
     private FunctionLibrary.FunctionName Function => _function;
 
-
+    private FunctionLibrary.Function CurrentFunction { get; set; } = null;
     Transform[] Points { get; set; }
+    private float LerpTimer { get; set; } = 0;
 
-    private void Awake ()=> PositionAndScalePoints();
+    public Action OnInit;
+
+    private const float TIME_TO_LERP = 4;
+
+    private void Start ()=> PositionAndScalePoints();
 
     private void Update() => UpdatePointsPosition();
 
@@ -30,6 +36,7 @@ public class Graph : MonoBehaviour
         float step = (float)2 / Resolution;
         Vector3 scale = Vector3.one * step;
         Vector3 pos = Vector3.zero;
+        SetFunction((int)Function);
 
         for (int i = 0, x = 0, z = 0; i < Points.Length; i++, x++)
         {
@@ -50,20 +57,35 @@ public class Graph : MonoBehaviour
 
             Points[i] = point;
         }
+        OnInit?.Invoke();
+    }
+
+    public void SetFunction(int newFunctionIndex)
+    {
+        CurrentFunction = FunctionLibrary.GetFunction(newFunctionIndex);
+        ResetTimer();
     }
 
     private void UpdatePointsPosition()
     {
         float time = Time.time;
+
         for (int i = 0; i < Points.Length; i++)
         {
             Transform point = Points[i];
             Vector3 pos = point.position;
 
-            var function = FunctionLibrary.GetFunction((int)Function);
-            pos.y = function(pos.x, pos.z, time);
+            pos.y = CurrentFunction(pos.x, pos.z, time);
 
-            point.position = pos;
+            var lerpAux = point.position;
+
+            point.position = Vector3.Lerp(point.position, pos, LerpTimer);
         }
+        LerpTimer += Time.deltaTime;
+    }
+
+    public void ResetTimer()
+    {
+        LerpTimer = 0;
     }
 }
