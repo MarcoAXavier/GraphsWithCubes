@@ -26,15 +26,21 @@ public class Graph : MonoBehaviour
 
     private void PositionAndScalePoints()
     {
-        Points = new Transform[Resolution];
+        Points = new Transform[Resolution * Resolution];
         float step = (float)2 / Resolution;
         Vector3 scale = Vector3.one * step;
         Vector3 pos = Vector3.zero;
 
-        for (int i = 0; i < Resolution; i++)
+        for (int i = 0, x = 0, z = 0; i < Points.Length; i++, x++)
         {
-            pos.x = (i + .5f) * step - 1f;
+            if (x == Resolution)
+            {
+                x = 0;
+                z++;
+            }
+            pos.x = (x + .5f) * step - 1f;
             pos.y = Mathf.Pow(pos.x,3);
+            pos.z = (z + .5f) * step - 1f;
 
             Transform point = Instantiate(PointPrefab);
             point.SetParent(transform, false);
@@ -55,7 +61,7 @@ public class Graph : MonoBehaviour
             Vector3 pos = point.position;
 
             var function = FunctionLibrary.GetFunction((int)Function);
-            pos.y = function(pos.x, time);
+            pos.y = function(pos.x, pos.z, time);
 
             point.position = pos;
         }

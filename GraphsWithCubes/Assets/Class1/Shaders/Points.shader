@@ -21,7 +21,7 @@ Shader "Slot/GraphsWithCubes/Points"
 
         void ConfigureSurface(Input input, inout SurfaceOutputStandard surface)
         {
-            surface.Albedo.rg = saturate(input.worldPos.xy * .5 +.5);
+            surface.Albedo = saturate(input.worldPos * .5 +.5);
             surface.Smoothness = _Smoothness;
         }
 
