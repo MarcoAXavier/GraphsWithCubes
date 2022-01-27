@@ -38,7 +38,7 @@ public class Graph : MonoBehaviour
         Vector3 scale = Vector3.one * step;
         SetFunction((int)Function);
 
-        for (int i = 0, x = 0, z = 0; i < Points.Length; i++, x++)
+        for (int i = 0, x = 0; i < Points.Length; i++, x++)
         {
             Transform point = Instantiate(PointPrefab);
             point.SetParent(transform, false);
