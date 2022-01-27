@@ -3,9 +3,15 @@ using static UnityEngine.Mathf;
 
 public static class FunctionLibrary
 {
-    static Function[] Functions = new Function[] { Wave, MultiWave, Ripple, Sphere, PerturbedSphere, SphericMandala };
+    static Function[] Functions = new Function[]
+    {
+        Wave, MultiWave, Ripple, Sphere, PerturbedSphere, SphericMandala, Torus, PerturbedTorus
+    };
 
-    public enum FunctionName { Wave, MultiWave, Ripple, Sphere, PerturbedSphere, SphericMandala }
+    public enum FunctionName
+    {
+        Wave, MultiWave, Ripple, Sphere, PerturbedSphere, SphericMandala, Torus, PerturbedTorus
+    }
 
     public delegate Vector3 Function(float u, float v, float t);
 
@@ -82,6 +88,30 @@ public static class FunctionLibrary
         p.x = scale * Sin(PI * u + t);
         p.y = radius * Sin(PI * .5f * v);
         p.z = scale * Cos(PI * u + t * p.y);
+        return p;
+    }
+
+    public static Vector3 Torus(float u, float v, float t)
+    {
+        float biggerRadius = 0.75f;
+        float smallerRadius = 0.25f;
+        float scale = biggerRadius + smallerRadius * Cos( PI * v);
+        Vector3 p = Vector3.zero;
+        p.x = scale * Sin(PI * u + t);
+        p.y = smallerRadius * Sin(PI * v);
+        p.z = scale * Cos(PI * u + t);
+        return p;
+    }
+
+    public static Vector3 PerturbedTorus(float u, float v, float t)
+    {
+        float biggerRadius = 0.7f + 0.1f * Sin(PI * (6f * u + 0.5f * t));
+        float smallerRadius = 0.15f + 0.05f * Sin(PI * (8f * u + 4f * v + 2f * t));
+        float scale = biggerRadius + smallerRadius * Cos(PI * v);
+        Vector3 p = Vector3.zero;
+        p.x = scale * Sin(PI * u + t);
+        p.y = smallerRadius * Sin(PI * v);
+        p.z = scale * Cos(PI * u + t);
         return p;
     }
 }
