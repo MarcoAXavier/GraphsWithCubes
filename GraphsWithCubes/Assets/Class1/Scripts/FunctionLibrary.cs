@@ -1,3 +1,4 @@
+using UnityEngine;
 using static UnityEngine.Mathf;
 
 public static class FunctionLibrary
@@ -6,7 +7,7 @@ public static class FunctionLibrary
 
     public enum FunctionName { Wave, MultiWave, Ripple }
 
-    public delegate float Function(float x, float z, float t);
+    public delegate Vector3 Function(float u, float v, float t);
 
     public static Function GetFunction(int functionIndex)
     {
@@ -18,21 +19,37 @@ public static class FunctionLibrary
         return Functions.Length;
     }
 
-    public static float Wave(float x, float z, float t)
+    public static Vector3 Wave(float u, float v, float t)
     {
-        return Sin(PI * (x + z + t));
+        Vector3 p = Vector3.zero;
+        p.x = u;
+        p.y = Sin(PI * (u + v + t));
+        p.z = v;
+        return p;
     }
-    public static float MultiWave(float x, float z, float t)
+    public static Vector3 MultiWave(float u, float v, float t)
     {
-        float y =  Sin(PI * (x + t));
-        y += 0.5f * Sin(2f * PI * (z + t));
-        y += Sin(PI * (x + z + .25f * t));
-        return y * (1f/2.5f);
+        Vector3 p = Vector3.zero;
+        p.x = u;
+        p.z = v;
+
+        float y = Sin(PI * (u + t));
+        y += 0.5f * Sin(2f * PI * (v + t));
+        y += Sin(PI * (u + v + .25f * t));
+        p.y = y * (1f / 2.5f);
+
+        return p;
     }
-    public static float Ripple(float x, float z, float t)
+    public static Vector3 Ripple(float u, float v, float t)
     {
-        float distance = Sqrt(x*x + z*z);
+        Vector3 p = Vector3.zero;
+        p.x = u;
+        p.z = v;
+
+        float distance = Sqrt(u*u + v*v);
         float y = Sin(PI*(4 * distance-t))   /   (1f+(10f*distance));
-        return y;
+        p.y = y;
+        
+        return p;
     }
 }

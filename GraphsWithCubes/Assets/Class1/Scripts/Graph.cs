@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
@@ -35,24 +36,13 @@ public class Graph : MonoBehaviour
         Points = new Transform[Resolution * Resolution];
         float step = (float)2 / Resolution;
         Vector3 scale = Vector3.one * step;
-        Vector3 pos = Vector3.zero;
         SetFunction((int)Function);
 
         for (int i = 0, x = 0, z = 0; i < Points.Length; i++, x++)
         {
-            if (x == Resolution)
-            {
-                x = 0;
-                z++;
-            }
-            pos.x = (x + .5f) * step - 1f;
-            pos.y = Mathf.Pow(pos.x,3);
-            pos.z = (z + .5f) * step - 1f;
-
             Transform point = Instantiate(PointPrefab);
             point.SetParent(transform, false);
 
-            point.localPosition = pos;
             point.localScale = scale;
 
             Points[i] = point;
@@ -70,16 +60,19 @@ public class Graph : MonoBehaviour
     {
         float time = Time.time;
 
-        for (int i = 0; i < Points.Length; i++)
+        float step = 2f / Resolution;
+        float v = .5f * step - 1f;
+        for (int i = 0, x=0, z=0; i < Points.Length; i++, x++)
         {
-            Transform point = Points[i];
-            Vector3 pos = point.position;
+            if (x == Resolution)
+            {
+                x = 0;
+                z++;
+                v = (z + .5f) *step - 1f;
+            }
 
-            pos.y = CurrentFunction(pos.x, pos.z, time);
-
-            var lerpAux = point.position;
-
-            point.position = Vector3.Lerp(point.position, pos, LerpTimer);
+            float u = (x + .5f) * step - 1f;
+            Points[i].localPosition = CurrentFunction(u, v, time);
         }
         LerpTimer += Time.deltaTime;
     }
@@ -88,4 +81,11 @@ public class Graph : MonoBehaviour
     {
         LerpTimer = 0;
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        SetFunction((int)Function);
+    }
+#endif
 }
