@@ -3,9 +3,9 @@ using static UnityEngine.Mathf;
 
 public static class FunctionLibrary
 {
-    static Function[] Functions = new Function[] { Wave, MultiWave, Ripple };
+    static Function[] Functions = new Function[] { Wave, MultiWave, Ripple, Sphere, PerturbedSphere, SphericMandala };
 
-    public enum FunctionName { Wave, MultiWave, Ripple }
+    public enum FunctionName { Wave, MultiWave, Ripple, Sphere, PerturbedSphere, SphericMandala }
 
     public delegate Vector3 Function(float u, float v, float t);
 
@@ -46,10 +46,42 @@ public static class FunctionLibrary
         p.x = u;
         p.z = v;
 
-        float distance = Sqrt(u*u + v*v);
-        float y = Sin(PI*(4 * distance-t))   /   (1f+(10f*distance));
+        float distance = Sqrt(u * u + v * v);
+        float y = Sin(PI * (4 * distance - t)) / (1f + (10f * distance));
         p.y = y;
-        
+
+        return p;
+    }
+
+    public static Vector3 Sphere(float u, float v, float t)
+    {
+        float radius = 0.5f + 0.5f;
+        float scale = radius * Cos(0.5f * PI * v);
+        Vector3 p = Vector3.zero;
+        p.x = scale * Sin(PI * u + t);
+        p.y = radius * Sin(PI * .5f * v);
+        p.z = scale * Cos(PI * u + t);
+        return p;
+    }
+
+    public static Vector3 PerturbedSphere(float u, float v, float t)
+    {
+        float radius = 0.9f + 0.1f * Sin(PI * (6f * u + 4f * v + t));
+        float scale = radius * Cos(0.5f * PI * v);
+        Vector3 p = Vector3.zero;
+        p.x = scale * Sin(PI * u);
+        p.y = radius * Sin(PI * .5f * v);
+        p.z = scale * Cos(PI * u);
+        return p;
+    }
+    public static Vector3 SphericMandala(float u, float v, float t)
+    {
+        float radius = 0.5f + 0.5f;
+        float scale = radius * Cos(0.5f * PI * v);
+        Vector3 p = Vector3.zero;
+        p.x = scale * Sin(PI * u + t);
+        p.y = radius * Sin(PI * .5f * v);
+        p.z = scale * Cos(PI * u + t * p.y);
         return p;
     }
 }
