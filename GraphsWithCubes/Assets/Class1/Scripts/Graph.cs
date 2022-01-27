@@ -25,8 +25,6 @@ public class Graph : MonoBehaviour
 
     public Action OnInit;
 
-    private const float TIME_TO_LERP = 4;
-
     private void Start ()=> PositionAndScalePoints();
 
     private void Update() => UpdatePointsPosition();
@@ -53,7 +51,6 @@ public class Graph : MonoBehaviour
     public void SetFunction(int newFunctionIndex)
     {
         CurrentFunction = FunctionLibrary.GetFunction(newFunctionIndex);
-        ResetTimer();
     }
 
     private void UpdatePointsPosition()
@@ -74,18 +71,5 @@ public class Graph : MonoBehaviour
             float u = (x + .5f) * step - 1f;
             Points[i].localPosition = CurrentFunction(u, v, time);
         }
-        LerpTimer += Time.deltaTime;
     }
-
-    public void ResetTimer()
-    {
-        LerpTimer = 0;
-    }
-
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        SetFunction((int)Function);
-    }
-#endif
 }
