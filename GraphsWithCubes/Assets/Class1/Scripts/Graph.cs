@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 public class Graph : MonoBehaviour
