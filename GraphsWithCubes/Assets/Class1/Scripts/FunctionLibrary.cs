@@ -21,6 +21,11 @@ public static class FunctionLibrary
         return Functions[functionIndex];
     }
 
+    public static string GetFunctionName(Function function)
+    {
+        var functionName = (FunctionName)Functions.IndexOf(function);
+        return functionName.ToString();
+    }
 
     public static Function GetNextFunction(Function function)
     {
@@ -38,6 +43,12 @@ public static class FunctionLibrary
             if (rnd != Functions.IndexOf(excludedFunction)) break;
         }
         return GetFunction(rnd);
+    }
+
+    public static Vector3 Morph(float u, float v, float t, Function from, Function to, float morphT)
+    {
+        var smoothMorthT = SmoothStep(0, 1, morphT);
+        return Vector3.LerpUnclamped(from(u, v, t), to(u, v, t), smoothMorthT);
     }
 
     public static Vector3 Wave(float u, float v, float t)
