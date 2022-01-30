@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Mathf;
 
 public static class FunctionLibrary
 {
-    static Function[] Functions = new Function[]
+    static List<Function> Functions = new List<Function>()
     {
         Wave, MultiWave, Ripple, Sphere, PerturbedSphere, SphericMandala, Torus, PerturbedTorus
     };
@@ -20,9 +21,23 @@ public static class FunctionLibrary
         return Functions[functionIndex];
     }
 
-    public static int GetFunctionsCount()
+
+    public static Function GetNextFunction(Function function)
     {
-        return Functions.Length;
+        int functionIndex = Functions.Contains(function) ? Functions.IndexOf(function) : -1;
+        int nextFunctionIndex = (functionIndex + 1) % Functions.Count;
+        return Functions[nextFunctionIndex];
+    }
+
+    public static Function GetRandomFunctionOtherThan(Function excludedFunction)
+    {
+        int rnd = -1;
+        for (int i = 0; i < 5; i++)
+        {
+            rnd = Random.Range(0, Functions.Count);
+            if (rnd != Functions.IndexOf(excludedFunction)) break;
+        }
+        return GetFunction(rnd);
     }
 
     public static Vector3 Wave(float u, float v, float t)

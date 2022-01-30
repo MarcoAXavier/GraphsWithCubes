@@ -15,15 +15,29 @@ public class Graph : MonoBehaviour
     private FunctionLibrary.FunctionName _function = 0;
     private FunctionLibrary.FunctionName Function => _function;
 
+    [SerializeField, Min(0f)] 
+    private float _functionDuration;
+    private float FunctionDuration => _functionDuration;
+
+
     private FunctionLibrary.Function CurrentFunction { get; set; } = null;
     Transform[] Points { get; set; }
-    private float LerpTimer { get; set; } = 0;
+    private float CurrentDuration { get; set; } = 0;
 
     public Action OnInit;
 
     private void Start ()=> PositionAndScalePoints();
 
-    private void Update() => UpdatePointsPosition();
+    private void Update()
+    {
+        CurrentDuration += Time.deltaTime;
+        if (CurrentDuration > FunctionDuration)
+        {
+            CurrentDuration -= FunctionDuration;
+            SetFunction(FunctionLibrary.GetRandomFunctionOtherThan(CurrentFunction));
+        }
+        UpdatePointsPosition();
+    }
 
     private void PositionAndScalePoints()
     {
@@ -47,6 +61,11 @@ public class Graph : MonoBehaviour
     public void SetFunction(int newFunctionIndex)
     {
         CurrentFunction = FunctionLibrary.GetFunction(newFunctionIndex);
+    }
+
+    public void SetFunction(FunctionLibrary.Function newFunction)
+    {
+        CurrentFunction = newFunction;
     }
 
     private void UpdatePointsPosition()
