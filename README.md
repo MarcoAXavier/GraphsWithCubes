@@ -1,4 +1,4 @@
-This is HEAVILY based on a tutorial from Catlike Coding, which can be accessed by this link:<br/>
+All the code in this repository is mine but it is HEAVILY based on a tutorial from Catlike Coding, which can be accessed by this link:<br/>
 https://catlikecoding.com/unity/tutorials/basics/building-a-graph/<br/>
 
 
